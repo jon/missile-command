@@ -11,7 +11,7 @@ manager.acquire_devices()
 
 try:
    rocket = manager.launchers[0]
-except: IndexError:
+except IndexError:
    print "No rocket launchers"
    exit(1)
 
