@@ -2,7 +2,7 @@
 from time import time
 from time import sleep
 
-class Launcher:
+class Launcher(object):
     """Basic missile launcher definition featuring simple calibration"""
     DOWN = 0
     UP = 1
