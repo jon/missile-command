@@ -18,15 +18,35 @@ class Launcher(object):
         self.moveDown()
         self.waitForExtent(self._DOWN)
         stop_down = time()
-        vertical_transit = stop_down - start_down
+        self.vertical_transit = stop_down - start_down
         self.moveLeft()
         self.waitForExtent(self._LEFT)
         start_right = time()
         self.moveRight()
         self.waitForExtent(self._RIGHT)
         stop_right = time()
-        horizontal_transit = stop_right - start_right
-        self.setTransitTimes(horizontal_transit, vertical_transit)
+        self.horizontal_transit = stop_right - start_right
+        
+        self.azimuthRate = self.azimuthRange / self.horizontal_transit
+        self.elevationRate = self.elevationRange / self.vertical_transit
+        
+        self.center()
+    
+    def center(self):
+        """Centers the launcher by traveling to nearest extents and returning to center"""
+        self.moveRight()
+        self.waitForExtent(self._RIGHT)
+        self.moveDown()
+        self.waitForExtent(self._DOWN)
+        
+        self.moveLeft()
+        sleep(self.horizontal_transit / 2.0)
+        self.stop()
+        
+        self.moveUp()
+        sleep(self.vertical_transit / 2.0)
+        self.stop()
+        self.azimuth, self.elevation = 0, 0
     
     def waitForExtent(self, extent):
         """Waits for the launcher to read a given extent"""
@@ -38,7 +58,7 @@ class Launcher(object):
         """Positions the launcher at a given azimuth and elevation given its current position. 
         Returns the elapsed time for azimuth and elevation movement as a tuple (azimuthTime, elevationTime)"""
         dtAzimuth = (azimuth - self.azimuth) / self.azimuthRate
-        dtElevation = elevation - self.elevation / self.elevationRate
+        dtElevation = (elevation - self.elevation) / self.elevationRate
         self.moveRight() if dtAzimuth > 0 else self.moveLeft()
         startAzimuth = time()
         sleep(abs(dtAzimuth))
