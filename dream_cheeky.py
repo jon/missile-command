@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-"""
-dream_cheeky.py
-
-Created by Erik Hollembeak on 2009-02-10.
-Copyright (c) 2009 Future Perfect Software. All rights reserved.
-"""
+# Copyright (C) 2009 Ballistic Pigeon, LLC
 
 import sys
 import os

@@ -1,4 +1,5 @@
 #!/sw/bin/python2.5
+# Copyright (C) 2009 Ballistic Pigeon, LLC
 
 import usb
 from dream_cheeky import DreamCheekyLauncher

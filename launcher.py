@@ -1,3 +1,4 @@
+# Copyright (C) 2009 Ballistic Pigeon, LLC
 
 from time import time
 from time import sleep
