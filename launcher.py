@@ -4,25 +4,25 @@ from time import sleep
 
 class Launcher:
     """Basic missile launcher definition featuring simple calibration"""
-    DOWN = 0
-    UP = 1
-    LEFT = 2
-    RIGHT = 3
+    _DOWN = 0
+    _UP = 1
+    _LEFT = 2
+    _RIGHT = 3
     
     def calibrate(self):
         """Calibrates this launcher by going finding transit time between extents in each dimension"""
         self.moveUp()
-        self.waitForExtent(self.UP)
+        self.waitForExtent(self._UP)
         start_down = time()
         self.moveDown()
-        self.waitForExtent(self.DOWN)
+        self.waitForExtent(self._DOWN)
         stop_down = time()
         vertical_transit = stop_down - start_down
         self.moveLeft()
-        self.waitForExtent(self.LEFT)
+        self.waitForExtent(self._LEFT)
         start_right = time()
         self.moveRight()
-        self.waitForExtent(self.RIGHT)
+        self.waitForExtent(self._RIGHT)
         stop_right = time()
         horizontal_transit = stop_right - start_right
         self.setTransitTimes(horizontal_transit, vertical_transit)
@@ -34,7 +34,20 @@ class Launcher:
             extents = self.checkExtents()
     
     def aim(self, azimuth, elevation):
-        """Positions the launcher at a given azimuth and elevation given its current position"""
-        pass
+        """Positions the launcher at a given azimuth and elevation given its current position. 
+        Returns the elapsed time for azimuth and elevation movement as a tuple (azimuthTime, elevationTime)"""
+        dtAzimuth = (azimuth - self.azimuth) / self.azimuthRate
+        dtElevation = elevation - self.elevation / self.elevationRate
+        self.moveRight() if dtAzimuth > 0 else self.moveLeft()
+        startAzimuth = time()
+        sleep(abs(dtAzimuth))
+        self.stop()
+        stopAzimuth = time()
+        self.moveUp() if dtElevation > 0 else self.moveDown()
+        startElevation = time()
+        sleep(abs(dtElevation))
+        self.stop()
+        stopElevation = time()
+        return ((stopAzimuth - startAzimuth), (stopElevation - startElevation))
     
 
