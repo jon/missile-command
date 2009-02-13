@@ -29,7 +29,12 @@ def main():
         print "Found the following launchers:"
         for launcher in launchers:
             print launcher            
-
+def init():
+    """Initializes, calibrates, and centers all attached missile launchers"""
+    launchers = find_launchers()
+    for launcher in launchers:
+        launcher.calibrate()
+    return launchers
 
 if __name__ == '__main__':
     main()
