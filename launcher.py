@@ -71,7 +71,7 @@ class Launcher(object):
         """Updates the current heading of the launcher based on any extents that have been hit"""
         bottom, top, left, right = extents
         if bottom or top:
-            self.elevation = self.elevationRange[0] if top else self.elevationRange[1]
+            self.elevation = self.elevationRange[0] if bottom else self.elevationRange[1]
         if left or right:
             self.azimuth = self.azimuthRange[0] if left else self.azimuthRange[1]
     
@@ -79,6 +79,7 @@ class Launcher(object):
         """Positions the launcher at a given azimuth and elevation given its current position. 
         Returns the elapsed time for azimuth and elevation movement as a tuple (azimuthTime, elevationTime)"""
         
+        self.checkExtents()
         # Calculate desired movement times
         dtAzimuth = (azimuth - self.azimuth) / self.azimuthRate
         dtElevation = (elevation - self.elevation) / self.elevationRate
@@ -99,6 +100,8 @@ class Launcher(object):
         stopElevation = time()
         elevationTransit = stopElevation - startElevation
         self.elevation += elevationTransit*self.elevationRate * sign(dtElevation)
+        
+        self.checkExtents()
         
         return (self.azimuth, self.elevation)
     
