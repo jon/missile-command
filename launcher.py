@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# encoding: utf-8
 # Copyright (C) 2009 Ballistic Pigeon, LLC
 
 from time import time
