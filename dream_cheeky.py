@@ -10,14 +10,14 @@ class DreamCheekyLauncher(Launcher):
     """Driver for DreamCheeky USB dart launcher"""
     def __init__(self, device):
         super(DreamCheekyLauncher, self).__init__()
-        self.device = device
+        self._device = device
         self._started = False
-        self.azimuthRange = 5.527672918645055 # Range of rotation in radians
-        self.elevationRange = 0.553079744043766
+        self.azimuthRange = (-2.76383645932, 2.76383645932) # Range of rotation in radians
+        self.elevationRange = (-0.120671968473228, 0.432407775570538)
     
     def start(self):
         """Opens the launcher and takes control of it"""
-        self.handle = handle = self.device.open()
+        self._handle = handle = self._device.open()
         try:
             handle.reset()
             handle.claimInterface(0)
@@ -31,7 +31,7 @@ class DreamCheekyLauncher(Launcher):
         """Sends a command to the robot"""
         if not self._started:
             self.start()
-        self.handle.controlMsg(0x21, 0x09, [command], 0x0200)
+        self._handle.controlMsg(0x21, 0x09, [command], 0x0200)
     
     def moveLeft(self):
         """Starts turret moving counterclockwise"""
@@ -64,11 +64,13 @@ class DreamCheekyLauncher(Launcher):
     def checkExtents(self):
         """Checks to see if the rocket is at any of its extents"""
         self.sendCommand(0x40)
-        byte, = self.handle.bulkRead(1, 1)
+        byte, = self._handle.bulkRead(1, 1)
         bottom = (byte & 0x1) <> 0
         top = (byte & 0x2) <> 0
         left = (byte & 0x4) <> 0
         right = (byte & 0x8) <> 0
-        return (bottom, top, left, right)
+        extents = (bottom, top, left, right)
+        self.updatePositionWithExtents(extents)
+        return extents
         
 
