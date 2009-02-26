@@ -24,7 +24,7 @@ class DreamCheekyLauncher(Launcher):
         except:
             handle.detachKernelDriver(0)
             handle.reset()
-            handle.claimInteface(0)
+            handle.claimInterface(0)
         self._started = True
     
     def sendCommand(self, command):
